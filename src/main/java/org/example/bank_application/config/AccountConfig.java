@@ -26,6 +26,8 @@ public class AccountConfig {
     @Autowired
     private  AccountUserRepository accountUserRepository;
 
+
+
     @Bean
     public UserDetailsService userDetailsService() {
         return username -> accountUserRepository.findByUsername(username);

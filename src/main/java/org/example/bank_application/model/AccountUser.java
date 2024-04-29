@@ -5,9 +5,9 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
+import lombok.*;
 import org.example.bank_application.enums.Role;
 import org.hibernate.validator.constraints.Length;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,9 +15,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
-
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
-    @Table(name = "account_user", uniqueConstraints = @UniqueConstraint(columnNames = {"username, phoneNumber"}))
+    @Table(name = "account_user")
     public class AccountUser implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,17 +35,16 @@ import java.util.List;
     @NotBlank
     @Length(min = 4, max = 20)
     private String lastName;
-    @Value("${myMiddleName}")
     private String middleName;
     @Column(name = "username", unique = true)
     @Email
     @Length(min = 5, max = 50)
     private String username;
-    @NotBlank
-    @NotNull
-    @Length(min = 5, max = 50, message = "Your password must be more than 5 characters and less than 50")
-    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=!])(?!.*\\s).{8,20}$",
-            message = "Password must be 8-20 characters long and include at least one lowercase letter, one uppercase letter, one digit, and one special character.")
+//    @NotBlank
+//    @NotNull
+//    @Length(max = 20, min = 5, message = "Your password must be more than 5 characters and less than 20")
+//    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=!])(?!.*\\s).{8,20}$",
+//            message = "Password must be 8-20 characters long and include at least one lowercase letter, one uppercase letter, one digit, and one special character.")
     private String password;
 
     @NotBlank
@@ -53,95 +54,6 @@ import java.util.List;
 
     @Enumerated(EnumType.STRING)
     private Role role;
-
-
-    public AccountUser(String firstName, String lastName, String middleName, String username, String password, String phoneNumber, Role role) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.middleName = middleName;
-        this.username = username;
-        this.password = password;
-        this.phoneNumber = phoneNumber;
-        this.role = role;
-    }
-
-    public AccountUser() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getMiddleName() {
-        return middleName;
-    }
-
-    public void setMiddleName(String middleName) {
-        this.middleName = middleName;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-
-    }
-
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    @Override
-    public String toString() {
-        return "AccountUser{" +
-                "id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", middleName='" + middleName + '\'' +
-                ", email='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                '}';
-    }
 
     @Override
     public boolean isAccountNonExpired() {

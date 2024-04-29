@@ -2,8 +2,14 @@ package org.example.bank_application.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity(name = "Bank_Account")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class BankAccount {
 
     @Id
@@ -14,36 +20,8 @@ public class BankAccount {
     private String accountNumber;
     private double accountBalance;
 
-
     @ManyToOne
     @JoinColumn(name = "user_id")
     private AccountUser accountUser;
 
-    public BankAccount(String accountNumber, double accountBalance, AccountUser accountUser) {
-        this.accountNumber = accountNumber;
-        this.accountBalance = accountBalance;
-        this.accountUser = accountUser;
-    }
-
-    public BankAccount() {}
-
-    public String getAccountNumber() {
-        return accountNumber;
-    }
-
-    public double getAccountBalance() {
-        return accountBalance;
-    }
-
-    public void setAccountBalance(double accountBalance) {
-        this.accountBalance = accountBalance;
-    }
-
-    public AccountUser getAccountUser() {
-        return accountUser;
-    }
-
-    public void setAccountUser(AccountUser accountUser) {
-        this.accountUser = accountUser;
-    }
 }
