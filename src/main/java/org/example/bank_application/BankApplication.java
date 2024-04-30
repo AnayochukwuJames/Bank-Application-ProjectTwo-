@@ -8,10 +8,12 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @SpringBootApplication
 @EnableCaching
+@Async
 public class BankApplication implements CommandLineRunner {
 
     @Autowired
@@ -31,7 +33,7 @@ public class BankApplication implements CommandLineRunner {
         adminUser.setFirstName("Admin");
         adminUser.setLastName("Admin");
         adminUser.setUsername("adminuser@gmail.com");
-        adminUser.setPassword(passwordEncoder.encode("Password24@#"));
+        adminUser.setPassword(passwordEncoder.encode("NewPassWord24@#"));
         adminUser.setPhoneNumber("07066929216");
         adminUser.setRole(Role.ADMIN);
 

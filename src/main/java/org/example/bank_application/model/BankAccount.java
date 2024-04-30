@@ -16,7 +16,7 @@ public class BankAccount {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 
     private Long id;
-    @Pattern(regexp = "[0-9]{10}")
+//    @Pattern(regexp = "[0-9]{10}")
     private String accountNumber;
     private double accountBalance;
 

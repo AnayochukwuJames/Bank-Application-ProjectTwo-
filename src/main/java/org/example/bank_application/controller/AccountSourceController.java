@@ -1,5 +1,7 @@
 package org.example.bank_application.controller;
 
+import jakarta.mail.MessagingException;
+import lombok.RequiredArgsConstructor;
 import org.example.bank_application.model.AccountResource;
 import org.example.bank_application.model.AccountUser;
 import org.example.bank_application.service.AccountUserService;
@@ -18,7 +20,7 @@ public class AccountSourceController {
         this.accountUserService = accountUserService;
     }
     @GetMapping("{id}")
-    public ResponseEntity<AccountResource> getAccountUserResource(@PathVariable Long id){
+    public ResponseEntity<AccountResource> getAccountUserResource(@PathVariable Long id) throws MessagingException {
         AccountUser user = accountUserService.getAccountById(id).getBody();
         AccountResource accountResource = new AccountResource();
         accountResource.setAccountUser(user);

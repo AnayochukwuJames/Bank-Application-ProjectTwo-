@@ -42,7 +42,7 @@ import java.util.List;
     private String username;
 //    @NotBlank
 //    @NotNull
-//    @Length(max = 20, min = 5, message = "Your password must be more than 5 characters and less than 20")
+//    @Length(min = 5, max = 20, message = "Your password must be more than 5 characters and less than 20")
 //    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=!])(?!.*\\s).{8,20}$",
 //            message = "Password must be 8-20 characters long and include at least one lowercase letter, one uppercase letter, one digit, and one special character.")
     private String password;

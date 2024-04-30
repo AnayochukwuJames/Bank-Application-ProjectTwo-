@@ -1,5 +1,6 @@
 package org.example.bank_application.controller;
 
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import org.example.bank_application.dto.LoginRequest;
 import org.example.bank_application.dto.LoginResponse;
@@ -14,18 +15,19 @@ import java.util.List;
 @RestController
 @RequestMapping("api/v1/user")
 public class AccountUserController {
+
     private final AccountUserService accountUserService;
 
     public AccountUserController(AccountUserService accountUserService) {
         this.accountUserService = accountUserService;
     }
-    @PostMapping("register")
-    public ResponseEntity<AccountUser> createUserAccount(@RequestBody @Valid AccountUser accountUser){
+    @PostMapping("/register")
+    public ResponseEntity<AccountUser> createUserAccount(@RequestBody @Valid AccountUser accountUser) throws MessagingException {
         return accountUserService.createUserAccount(accountUser);
     }
 
-    @PostMapping("login")
-    public ResponseEntity<LoginResponse> authenticateUser(@RequestBody @Valid LoginRequest loginRequest){
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> authenticateUser(@RequestBody @Valid LoginRequest loginRequest) throws MessagingException {
         return accountUserService.authenticated(loginRequest);
     }
 

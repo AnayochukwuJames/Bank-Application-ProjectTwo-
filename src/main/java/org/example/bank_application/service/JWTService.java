@@ -34,7 +34,8 @@ private String createFreshToken (Map<String, Object> mapOfClaims, UserDetails us
     return Jwts.builder()
             .addClaims(mapOfClaims)
             .setSubject(userDetails.getUsername())
-            .setIssuedAt(new Date(System.currentTimeMillis() + 1000 * 60 * 5))
+            .setIssuedAt(new Date())
+            .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 2))
             .setIssuer("Bank App 1.0")
             .signWith(getSignIngKey(), SignatureAlgorithm.HS256)
             .compact();

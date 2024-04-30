@@ -1,6 +1,8 @@
 package org.example.bank_application.service;
 
+import jakarta.mail.MessagingException;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.example.bank_application.dto.LoginRequest;
 import org.example.bank_application.dto.LoginResponse;
 import org.example.bank_application.enums.Role;
@@ -20,28 +22,49 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class AccountUserService {
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
 
-    @Autowired
-    private AccountUserRepository accountUserRepository;
+    private final AccountUserRepository accountUserRepository;
 
-    @Autowired
-    private JWTService jwtService;
+    private final JWTService jwtService;
+
+    private final MessageService messageService;
 
 
     @CacheEvict(value = "createUserAccount",allEntries = true)
-    public ResponseEntity<AccountUser> createUserAccount(AccountUser accountUser){
+    public ResponseEntity<AccountUser> createUserAccount(AccountUser accountUser) throws MessagingException {
         accountUser.setPassword(passwordEncoder.encode(accountUser.getPassword()));
        accountUser.setRole(Role.USER);
+       messageService.registrationNotification(accountUser.getUsername(), "Dear \n" + accountUser.getFirstName()
+       + "You have Successfully register for Our Bank Application. Please login with your username and password to enjoy our full services \n" +
+               "Thank you for Banking with us");
+
         return new ResponseEntity<>(accountUserRepository.save(accountUser), HttpStatus.CREATED);
     }
+    public ResponseEntity<LoginResponse> authenticated(LoginRequest loginRequest) throws MessagingException {
+        Authentication auth = authenticationManager
+                .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+        if (auth != null){
+            AccountUser accountUser = accountUserRepository.findByUsername(loginRequest.getUsername());
+            String token = jwtService.createToken(accountUser);
+            messageService.loginNotification(accountUser.getUsername(), "Dear \n" + accountUser.getFirstName() + "\n"
+                    + "You have login successful into your Bank Application Account. Please if you come across anything feel free to contact our customer service on this number \n" +
+                    "12345678, 07066929216 \n Thanks for Banking with us");
+            return new ResponseEntity<>(LoginResponse.builder()
+                    .accountUser(accountUser)
+                    .token(token)
+                    .build(), HttpStatus.OK);
+        }
+        return null;
+
+    }
+
+
 
     @CacheEvict(value = "delete", allEntries = true)
     public ResponseEntity<String> delete (Long id){
@@ -65,21 +88,6 @@ public class AccountUserService {
     @Cacheable(value = "getAllAccountUsers")
     public ResponseEntity<List<AccountUser>> getAllAccountUsers(){
         return new ResponseEntity<>(accountUserRepository.findAll(), HttpStatus.OK);
-    }
-
-    public ResponseEntity<LoginResponse> authenticated(LoginRequest loginRequest){
-        Authentication auth = authenticationManager
-                .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
-        if (auth != null){
-            AccountUser accountUser = accountUserRepository.findByUsername(loginRequest.getUsername());
-            String token = jwtService.createToken(accountUser);
-            return new ResponseEntity<>(LoginResponse.builder()
-                    .accountUser(accountUser)
-                    .token(token)
-                    .build(), HttpStatus.OK);
-        }
-        return null;
-
     }
 
 
