@@ -35,7 +35,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/v1/user/").hasAnyAuthority(Role.USER.name())
                 .requestMatchers("api/v1/user/**").hasAnyAuthority(Role.ADMIN.name())
                 .anyRequest().authenticated())
-//                .cors(AbstractHttpConfigurer::disable)
+                .cors(AbstractHttpConfigurer::disable)
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(bankApplicationFilter, UsernamePasswordAuthenticationFilter.class)

@@ -1,14 +1,12 @@
 package org.example.bank_application.service;
 
 import jakarta.mail.MessagingException;
-import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import org.example.bank_application.dto.LoginRequest;
 import org.example.bank_application.dto.LoginResponse;
 import org.example.bank_application.enums.Role;
 import org.example.bank_application.model.AccountUser;
 import org.example.bank_application.repository.AccountUserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
