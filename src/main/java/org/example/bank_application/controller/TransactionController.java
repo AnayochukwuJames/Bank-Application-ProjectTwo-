@@ -30,7 +30,7 @@ public class TransactionController {
     }
 
     @PostMapping("create")
-    public ResponseEntity<Transactions> createTransaction(@RequestBody Transactions transactions){
+    public ResponseEntity<Transactions> createTransaction(@RequestBody Transactions transactions, double amount){
         return transactionsService.createTransaction(transactions);
     }
 

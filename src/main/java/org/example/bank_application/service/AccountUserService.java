@@ -11,6 +11,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -33,7 +34,9 @@ public class AccountUserService {
 
     private final MessageService messageService;
 
+    private final BankAccountService bankAccountService;
 
+    @Async
     @CacheEvict(value = "createUserAccount",allEntries = true)
     public ResponseEntity<AccountUser> createUserAccount(AccountUser accountUser) throws MessagingException {
         accountUser.setPassword(passwordEncoder.encode(accountUser.getPassword()));
@@ -42,8 +45,13 @@ public class AccountUserService {
        + "You have Successfully register for Our Bank Application. Please login with your username and password to enjoy our full services \n" +
                "Thank you for Banking with us");
 
+       bankAccountService.createBankAccount(accountUser);
+
+
         return new ResponseEntity<>(accountUserRepository.save(accountUser), HttpStatus.CREATED);
     }
+
+    @Async
     public ResponseEntity<LoginResponse> authenticated(LoginRequest loginRequest) throws MessagingException {
         Authentication auth = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
@@ -61,8 +69,6 @@ public class AccountUserService {
         return null;
 
     }
-
-
 
     @CacheEvict(value = "delete", allEntries = true)
     public ResponseEntity<String> delete (Long id){
@@ -88,15 +94,14 @@ public class AccountUserService {
         return new ResponseEntity<>(accountUserRepository.findAll(), HttpStatus.OK);
     }
 
-
     @Cacheable(value = "getAccountById", key = "#id")
     public ResponseEntity<AccountUser> getAccountById(Long id){
         return new ResponseEntity<>(accountUserRepository.findById(id).get(), HttpStatus.OK);
     }
+
     @Cacheable(value = "getAccountUserByUsername", key = "#username")
     public ResponseEntity<AccountUser> getAccountUserByUsername(String username){
         return new ResponseEntity<>(accountUserRepository.findByUsername(username), HttpStatus.OK);
-
     }
 
     @Cacheable(value = "getAccountUserByPhoneNumber", key = "#phoneNumber")

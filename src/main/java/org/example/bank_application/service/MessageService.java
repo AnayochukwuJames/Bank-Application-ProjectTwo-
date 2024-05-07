@@ -23,6 +23,7 @@ public class MessageService {
         mimeMessageHelper.setText(message);
         javaMailSender.send(mimeMessageHelper.getMimeMessage());
     }
+    @Async
     public void registrationNotification(String receiver, String message) throws MessagingException {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "utf-8");

@@ -27,8 +27,8 @@ public class BankAccountController {
     }
 
     @GetMapping("/AccountUser")
-    public ResponseEntity<BankAccount> findByAccountUserUsername(@RequestParam String accountUser){
-        return bankAccountService.findByAccountUserUsername(accountUser);
+    public ResponseEntity<BankAccount> findByAccountUser(@RequestParam String accountUser){
+        return bankAccountService.findByAccountUser(accountUser);
     }
     @PostMapping("create")
     public ResponseEntity<BankAccount>createBankAccount(@RequestBody AccountUser accountUser){

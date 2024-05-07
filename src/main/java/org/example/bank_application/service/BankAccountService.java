@@ -25,8 +25,8 @@ public class BankAccountService {
         return new ResponseEntity<>(bankAccountRepository.findById(id).get(),HttpStatus.OK);
     }
 
-    public ResponseEntity<BankAccount> findByAccountUserUsername(String accountUser){
-        return new ResponseEntity<>(bankAccountRepository.findByAccountUserUsername(accountUser),HttpStatus.OK);
+    public ResponseEntity<BankAccount> findByAccountUser(String accountUser){
+        return new ResponseEntity<>(bankAccountRepository.findByAccountUser(accountUser),HttpStatus.OK);
     }
 
     public ResponseEntity<BankAccount> createBankAccountWithAmount(AccountUser accountUser, double openingAmount){
@@ -43,11 +43,20 @@ public class BankAccountService {
     public ResponseEntity<BankAccount> createBankAccount(AccountUser accountUser){
         StringBuilder accountNumber = new StringBuilder();
         int count = 0;
-        while (count < accountNumber.length()){
+        while (count < 10){
             int randomInt = new Random().nextInt(10);
             accountNumber.append(randomInt);
+            count ++;
         }
         BankAccount bankAccount = new BankAccount();
         return new ResponseEntity<>(bankAccountRepository.save(bankAccount),HttpStatus.CREATED);
+    }
+
+    public ResponseEntity<BankAccount> getByAccountNumber(String accountNumber){
+        return new ResponseEntity<>(bankAccountRepository.findBankAccountByAccountNumber(accountNumber), HttpStatus.OK);
+    }
+
+    public ResponseEntity<BankAccount> updateAccount(BankAccount bankAccount){
+        return new ResponseEntity<>(bankAccountRepository.save(bankAccount), HttpStatus.OK);
     }
 }
