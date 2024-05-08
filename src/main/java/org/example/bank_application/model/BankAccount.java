@@ -21,7 +21,11 @@ public class BankAccount {
     private double accountBalance;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+//    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "account_user_id")
     private AccountUser accountUser;
 
+    public BankAccount(String string, AccountUser accountUser, double openingAmount) {
+
+    }
 }

@@ -17,40 +17,44 @@ public class BankAccountService {
 
     private final BankAccountRepository bankAccountRepository;
 
-    public ResponseEntity<List<BankAccount>> getAllBankAccounts(){
-        return new ResponseEntity<>(bankAccountRepository.findAll(), HttpStatus.OK);
-    }
+//    public ResponseEntity<List<BankAccount>> getAllBankAccounts(){
+//        return new ResponseEntity<>(bankAccountRepository.findAll(), HttpStatus.OK);
+//    }
+//
+//    public ResponseEntity<BankAccount> getById(Long id){
+//        return new ResponseEntity<>(bankAccountRepository.findById(id).get(),HttpStatus.OK);
+//    }
+//
+//    public ResponseEntity<BankAccount> getByUser(String accountUser){
+//        return new ResponseEntity<>(bankAccountRepository.findByUser(accountUser),HttpStatus.OK);
+//    }
 
-    public ResponseEntity<BankAccount> getById(Long id){
-        return new ResponseEntity<>(bankAccountRepository.findById(id).get(),HttpStatus.OK);
-    }
-
-    public ResponseEntity<BankAccount> findByAccountUser(String accountUser){
-        return new ResponseEntity<>(bankAccountRepository.findByAccountUser(accountUser),HttpStatus.OK);
-    }
-
-    public ResponseEntity<BankAccount> createBankAccountWithAmount(AccountUser accountUser, double openingAmount){
+    public ResponseEntity<BankAccount> createBankAccount(AccountUser accountUser, double openingAmount ){
         StringBuilder accountNumber = new StringBuilder();
         int count = 0;
-        while (count < accountNumber.length()){
+        while(count < 10){
             int randomInt = new Random().nextInt(10);
             accountNumber.append(randomInt);
+            count++;
         }
-        BankAccount bankAccount = new BankAccount();
-        return new ResponseEntity<>(bankAccountRepository.save(bankAccount),HttpStatus.CREATED);
+        BankAccount account = new BankAccount(accountNumber.toString(), accountUser, openingAmount);
+        System.out.println(account);
+        return new ResponseEntity<>(bankAccountRepository.save(account), HttpStatus.CREATED);
     }
 
-    public ResponseEntity<BankAccount> createBankAccount(AccountUser accountUser){
-        StringBuilder accountNumber = new StringBuilder();
-        int count = 0;
-        while (count < 10){
-            int randomInt = new Random().nextInt(10);
-            accountNumber.append(randomInt);
-            count ++;
-        }
-        BankAccount bankAccount = new BankAccount();
-        return new ResponseEntity<>(bankAccountRepository.save(bankAccount),HttpStatus.CREATED);
+public ResponseEntity<BankAccount> createBankAccount(AccountUser accountUser ){
+    StringBuilder accountNumber = new StringBuilder();
+    int count = 0;
+    while(count < 10){
+        int randomInt = new Random().nextInt(10);
+        accountNumber.append(randomInt);
+        count++;
     }
+    BankAccount account = new BankAccount(accountNumber.toString(), accountUser, 0.0);
+    System.out.println(account);
+    return new ResponseEntity<>(bankAccountRepository.save(account), HttpStatus.CREATED);
+}
+
 
     public ResponseEntity<BankAccount> getByAccountNumber(String accountNumber){
         return new ResponseEntity<>(bankAccountRepository.findBankAccountByAccountNumber(accountNumber), HttpStatus.OK);
@@ -59,4 +63,6 @@ public class BankAccountService {
     public ResponseEntity<BankAccount> updateAccount(BankAccount bankAccount){
         return new ResponseEntity<>(bankAccountRepository.save(bankAccount), HttpStatus.OK);
     }
+
+
 }

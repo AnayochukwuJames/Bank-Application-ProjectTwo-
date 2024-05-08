@@ -32,6 +32,7 @@ public class BankApplication implements CommandLineRunner {
 
         adminUser.setFirstName("Admin");
         adminUser.setLastName("Admin");
+        adminUser.setMiddleName("Admin");
         adminUser.setUsername("adminuser@gmail.com");
         adminUser.setPassword(passwordEncoder.encode("NewPassWord24@#"));
         adminUser.setPhoneNumber("07066929216");
@@ -40,7 +41,7 @@ public class BankApplication implements CommandLineRunner {
         AccountUser user = accountUserService.getAccountUserByUsername("adminuser@gmail.com").getBody();
 
         if (user == null){
-            accountUserService.createUserAccount(adminUser);
+            accountUserService.postAccountUser(adminUser);
         }
     }
 }

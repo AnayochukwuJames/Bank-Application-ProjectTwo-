@@ -79,4 +79,6 @@ import java.util.List;
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(this.role.name()));
     }
+
+
 }

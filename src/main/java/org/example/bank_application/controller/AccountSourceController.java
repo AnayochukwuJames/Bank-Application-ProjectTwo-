@@ -37,7 +37,7 @@ public class AccountSourceController {
         Link delete = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(AccountUserController.class)
                 .delete(id)).withRel("delete");
         Link username = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(AccountUserController.class)
-                .getAccountUserByUsername("username")).withRel("username");
+                .findByUsername("username")).withRel("username");
         Link phoneNumber = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(AccountUserController.class)
                 .getAccountUserByPhoneNumber("phoneNumber")).withRel("phoneNumber");
         accountResource.add(selfLink, createUserAccount,update,getAll,getById,delete,username,phoneNumber);

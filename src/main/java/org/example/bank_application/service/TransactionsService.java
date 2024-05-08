@@ -16,32 +16,64 @@ import java.util.Random;
 public class TransactionsService {
 
     private final TransactionRepository transactionRepository;
-
     public ResponseEntity<List<Transactions>> getAllTransactions(){
         return new ResponseEntity<>(transactionRepository.findAll(), HttpStatus.OK);
     }
 
-    public ResponseEntity<Transactions> getById(Long id){
+    public ResponseEntity<Transactions> getById(long id){
         return new ResponseEntity<>(transactionRepository.findById(id).get(), HttpStatus.OK);
     }
 
-    public ResponseEntity<Transactions> getTransactionsById(String transactionId){
-        return new ResponseEntity<>(transactionRepository.findByTransactionId(transactionId),HttpStatus.OK);
-    }
-
-    public ResponseEntity<Transactions> createTransaction(Transactions transactions){
-        return new ResponseEntity<>(transactionRepository.save(transactions), HttpStatus.CREATED);
+    public ResponseEntity<List<Transactions>> getByTransactionId(String transactionId){
+        return new ResponseEntity<>(transactionRepository.findByTransactionId(transactionId), HttpStatus.OK);
     }
 
     public ResponseEntity<Transactions> postNewTransaction(Transactions transactions){
+        transactions.setTransactionDate(new Date(System.currentTimeMillis()));
+        return new ResponseEntity<>(transactionRepository.save(transactions), HttpStatus.CREATED);
+    }
+
+    public ResponseEntity<Transactions> postNewTransaction(Transactions transactions, String txnId){
+        transactions.setTransactionDate(new Date(System.currentTimeMillis()));
+        return new ResponseEntity<>(transactionRepository.save(transactions), HttpStatus.CREATED);
+    }
+
+    public String generateTxnId(){
         StringBuilder transId = new StringBuilder();
         transId.append("TXN");
         for( int i = 0; i < 10; i++ ){
             int random = new Random().nextInt(10);
             transId.append(random);
         }
-        transactions.setTransactionId(transId.toString());
-        transactions.setTransactionDate(new Date(System.currentTimeMillis()));
-        return new ResponseEntity<>(transactionRepository.save(transactions), HttpStatus.CREATED);
+        return transId.toString();
     }
+
+//    public ResponseEntity<List<Transactions>> getAllTransactions(){
+//        return new ResponseEntity<>(transactionRepository.findAll(), HttpStatus.OK);
+//    }
+//
+//    public ResponseEntity<Transactions> getById(Long id){
+//        return new ResponseEntity<>(transactionRepository.findById(id).get(), HttpStatus.OK);
+//    }
+//
+//    public ResponseEntity<Transactions> getTransactionsById(String transactionId){
+//        return new ResponseEntity<>(transactionRepository.findByTransactionId(transactionId),HttpStatus.OK);
+//    }
+//
+//    public ResponseEntity<Transactions> createTransaction(Transactions transactions){
+//        return new ResponseEntity<>(transactionRepository.save(transactions), HttpStatus.CREATED);
+//    }
+//
+//    public ResponseEntity<Transactions> postNewTransaction(Transactions transactions){
+//        StringBuilder transId = new StringBuilder();
+//        transId.append("TXN");
+//        for( int i = 0; i < 10; i++ ){
+//            int random = new Random().nextInt(10);
+//            transId.append(random);
+//        }
+//        transactions.setTransactionId(transId.toString());
+//        transactions.setTransactionDate(new Date(System.currentTimeMillis()));
+//        return new ResponseEntity<>(transactionRepository.save(transactions), HttpStatus.CREATED);
+//    }
+
 }

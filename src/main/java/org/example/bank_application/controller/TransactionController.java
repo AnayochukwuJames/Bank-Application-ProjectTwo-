@@ -1,5 +1,6 @@
 package org.example.bank_application.controller;
 
+import jakarta.validation.Valid;
 import lombok.*;
 import org.example.bank_application.model.Transactions;
 import org.example.bank_application.service.TransactionsService;
@@ -15,23 +16,24 @@ public class TransactionController {
 
     private final TransactionsService transactionsService;
 
-    @GetMapping("getALl")
-   public ResponseEntity<List<Transactions>> getAllTransactions(){
+    @GetMapping("")
+    public ResponseEntity<List<Transactions>> getAllTransactions(){
         return transactionsService.getAllTransactions();
     }
-    @GetMapping("transactions/{id}")
-    public ResponseEntity<Transactions> getById(@PathVariable Long id){
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Transactions> getById(@PathVariable long id){
         return transactionsService.getById(id);
     }
 
-    @GetMapping("transactionId")
-    public ResponseEntity<Transactions>getTransactionsById(@RequestParam String transactionId){
-        return transactionsService.getTransactionsById(transactionId);
+    @GetMapping("/transId")
+    public ResponseEntity<List<Transactions>> getByTransactionId(@RequestParam String transactionId){
+        return transactionsService.getByTransactionId(transactionId);
     }
 
-    @PostMapping("create")
-    public ResponseEntity<Transactions> createTransaction(@RequestBody Transactions transactions, double amount){
-        return transactionsService.createTransaction(transactions);
+    @PostMapping("")
+    public ResponseEntity<Transactions> postNewTransaction(@RequestBody @Valid Transactions transactions){
+        return transactionsService.postNewTransaction(transactions);
     }
 
 }

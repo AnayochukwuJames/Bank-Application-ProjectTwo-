@@ -32,4 +32,38 @@ public class MessageService {
         mimeMessageHelper.setText(message);
         javaMailSender.send(mimeMessageHelper.getMimeMessage());
     }
+    @Async
+    public void depositNotification(String firstName, String username, double amount) throws MessagingException {
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+        MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, true, "utf-8");
+        messageHelper.setTo(username);
+        messageHelper.setSubject("Deposit Alert!");
+        String message = String.format("Dear %s,\nA deposit of %s has been credited into your account number.", firstName, amount);
+        messageHelper.setText(message);
+
+        javaMailSender.send(messageHelper.getMimeMessage());
+    }
+
+    @Async
+    public void withdrawalNotification(String firstName, String username, double amount) throws MessagingException {
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+        MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, true, "utf-8");
+        messageHelper.setTo(username);
+        messageHelper.setSubject("Debit Alert!");
+        String message = String.format("Dear %s,\nA withdrawal of %s has been debited from your account number.", firstName, amount);
+        messageHelper.setText(message);
+
+        javaMailSender.send(messageHelper.getMimeMessage());
+    }
+
+    public void sendResetCode(String username, String code) throws MessagingException {
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+        MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, true, "utf-8");
+        messageHelper.setTo(username);
+        messageHelper.setSubject("Password Reset Code!");
+        String message = String.format("Dear %s,\nHere is your password reset code: %s.", username, code);
+        messageHelper.setText(message);
+
+        javaMailSender.send(messageHelper.getMimeMessage());
+    }
 }

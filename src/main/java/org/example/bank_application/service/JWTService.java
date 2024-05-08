@@ -35,7 +35,7 @@ private String createFreshToken (Map<String, Object> mapOfClaims, UserDetails us
             .addClaims(mapOfClaims)
             .setSubject(userDetails.getUsername())
             .setIssuedAt(new Date())
-            .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 2))
+            .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 10))
             .setIssuer("Bank App 1.0")
             .signWith(getSignIngKey(), SignatureAlgorithm.HS256)
             .compact();

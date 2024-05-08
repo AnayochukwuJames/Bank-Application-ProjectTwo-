@@ -30,7 +30,7 @@ public class AccountConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return username -> accountUserRepository.findByUsername(username);
+        return username -> accountUserRepository.getByUsername(username);
         }
 
     @Bean
