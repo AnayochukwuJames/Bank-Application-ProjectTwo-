@@ -1,5 +1,6 @@
 package org.example.bank_application;
 
+import lombok.RequiredArgsConstructor;
 import org.example.bank_application.config.AccountConfig;
 import org.example.bank_application.enums.Role;
 import org.example.bank_application.model.AccountUser;
@@ -10,18 +11,20 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @SpringBootApplication
 @EnableCaching
-@Async
+@EnableAsync
+@RequiredArgsConstructor
 public class BankApplication implements CommandLineRunner {
 
-    @Autowired
-    private AccountConfig config;
 
-    @Autowired
-    private AccountUserService accountUserService;
+    private final AccountConfig config;
+
+
+    private final AccountUserService accountUserService;
 
     public static void main(String[] args) {
         SpringApplication.run(BankApplication.class, args);
