@@ -17,6 +17,8 @@ public class BankAccountService {
 
     private final BankAccountRepository bankAccountRepository;
 
+//    private final MessageService messageService;
+
 //    public ResponseEntity<List<BankAccount>> getAllBankAccounts(){
 //        return new ResponseEntity<>(bankAccountRepository.findAll(), HttpStatus.OK);
 //    }
@@ -37,24 +39,23 @@ public class BankAccountService {
             accountNumber.append(randomInt);
             count++;
         }
-        BankAccount account = new BankAccount(accountNumber.toString(), accountUser, openingAmount);
+        BankAccount account = new BankAccount((long) 1.0, accountNumber.toString(), openingAmount, accountUser);
         System.out.println(account);
         return new ResponseEntity<>(bankAccountRepository.save(account), HttpStatus.CREATED);
     }
 
-public ResponseEntity<BankAccount> createBankAccount(AccountUser accountUser ){
-    StringBuilder accountNumber = new StringBuilder();
-    int count = 0;
-    while(count < 10){
-        int randomInt = new Random().nextInt(10);
-        accountNumber.append(randomInt);
-        count++;
+    public ResponseEntity<BankAccount> createBankAccount(AccountUser accountUser ){
+        StringBuilder accountNumber = new StringBuilder();
+        int count = 0;
+        while(count < 10){
+            int randomInt = new Random().nextInt(10);
+            accountNumber.append(randomInt);
+            count++;
+        }
+        BankAccount account = new BankAccount((long) 1, accountNumber.toString(), 0.0, accountUser);
+        System.out.println(account);
+        return new ResponseEntity<>(bankAccountRepository.save(account), HttpStatus.CREATED);
     }
-    BankAccount account = new BankAccount(accountNumber.toString(), accountUser, 0.0);
-    System.out.println(account);
-    return new ResponseEntity<>(bankAccountRepository.save(account), HttpStatus.CREATED);
-}
-
 
     public ResponseEntity<BankAccount> getByAccountNumber(String accountNumber){
         return new ResponseEntity<>(bankAccountRepository.findBankAccountByAccountNumber(accountNumber), HttpStatus.OK);

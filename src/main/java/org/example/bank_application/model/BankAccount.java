@@ -14,18 +14,12 @@ public class BankAccount {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private Long id;
-//    @Pattern(regexp = "[0-9]{10}")
     private String accountNumber;
     private double accountBalance;
 
     @ManyToOne
-//    @JoinColumn(name = "user_id")
-    @JoinColumn(name = "account_user_id")
+    @JoinColumn(name = "user_id")
     private AccountUser accountUser;
 
-    public BankAccount(String string, AccountUser accountUser, double openingAmount) {
-
-    }
 }

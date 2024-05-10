@@ -23,15 +23,26 @@ public class MessageService {
         mimeMessageHelper.setText(message);
         javaMailSender.send(mimeMessageHelper.getMimeMessage());
     }
-    @Async
-    public void registrationNotification(String receiver, String message) throws MessagingException {
+    public void registrationNotification(String receiver, String firstName) throws MessagingException {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "utf-8");
-        mimeMessageHelper.setTo(receiver);
-        mimeMessageHelper.setSubject("Registration Notification");
-        mimeMessageHelper.setText(message);
-        javaMailSender.send(mimeMessageHelper.getMimeMessage());
+        MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, true, "utf-8");
+        messageHelper.setTo(receiver);
+        messageHelper.setSubject("Registration Successful!");
+        String message = String.format("Dear %s,\nCongratulations!\nYou have successfully registered with Email address: %s\nYour account number is: %s", firstName, receiver, accountNumber);
+        messageHelper.setText(message);
+        javaMailSender.send(messageHelper.getMimeMessage());
     }
+//    @Async
+//    public void registrationNotification( String receiver, String firstName ) throws MessagingException {
+//        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+//        MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, true, "utf-8");
+//        messageHelper.setTo(receiver);
+//        messageHelper.setSubject("Registration Successful!");
+//        String message = String.format("Dear %s,\nCongratulations!\nYou have successfully registered with Email address: %s", firstName, receiver);
+//        messageHelper.setText(message);
+//        javaMailSender.send(messageHelper.getMimeMessage());
+//    }
+
     @Async
     public void depositNotification(String firstName, String username, double amount) throws MessagingException {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();

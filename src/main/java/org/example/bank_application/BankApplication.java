@@ -1,5 +1,6 @@
 package org.example.bank_application;
 
+import org.example.bank_application.config.AccountConfig;
 import org.example.bank_application.enums.Role;
 import org.example.bank_application.model.AccountUser;
 import org.example.bank_application.service.AccountUserService;
@@ -17,7 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class BankApplication implements CommandLineRunner {
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private AccountConfig config;
 
     @Autowired
     private AccountUserService accountUserService;
@@ -30,6 +31,7 @@ public class BankApplication implements CommandLineRunner {
     public void run(String... args) throws Exception {
         AccountUser adminUser = new AccountUser();
 
+        PasswordEncoder passwordEncoder = config.passwordEncoder();
         adminUser.setFirstName("Admin");
         adminUser.setLastName("Admin");
         adminUser.setMiddleName("Admin");

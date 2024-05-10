@@ -10,6 +10,7 @@ import org.example.bank_application.dto.LoginResponse;
 import org.example.bank_application.dto.ChangePasswordRequest;
 import org.example.bank_application.enums.Role;
 import org.example.bank_application.model.AccountUser;
+import org.example.bank_application.model.BankAccount;
 import org.example.bank_application.model.ResetCode;
 import org.example.bank_application.repository.AccountUserRepository;
 import org.example.bank_application.repository.ResetCodeRepository;
@@ -50,33 +51,29 @@ public class AccountUserService {
 
     private final ResetCodeRepository resetCodeRepository;
 
-    @Async
-    public ResponseEntity<AccountUser> postAccountUser(@RequestBody AccountUser user) throws MessagingException {
-        passwordEncoder = accountConfig.passwordEncoder();
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRole(Role.USER);
-        messageService.registrationNotification(user.getUsername(), user.getFirstName());
-        AccountUser savedUser = accountUserRepository.save(user);
-        bankAccountService.createBankAccount(savedUser);
-        return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
-    }
-//    @CacheEvict(value = "createUserAccount", allEntries = true)
-//    public ResponseEntity<AccountUser> createUserAccount(AccountUser accountUser) throws MessagingException {
+
+//    public ResponseEntity<AccountUser> postAccountUser(AccountUser user) throws MessagingException {
 //        passwordEncoder = accountConfig.passwordEncoder();
-//
-//        accountUser.setPassword(passwordEncoder.encode(accountUser.getPassword()));
-//        accountUser.setRole(Role.USER);
-//        messageService.registrationNotification(accountUser.getUsername(), "Dear " + accountUser.getFirstName() + ","
-//                + "You have Successfully register for Our Bank Application. Please login with your username and password to enjoy our full services \n" +
-//                "Thank you for Banking with us");
-//        AccountUser savedUser = accountUserRepository.save(accountUser);
-//        bankAccountService.createBankAccount(savedUser);
-//
+//        user.setPassword(passwordEncoder.encode(user.getPassword()));
+//        user.setRole(Role.USER);
+//        AccountUser savedUser = accountUserRepository.save(user);
+//        String accountNumber = String.valueOf(bankAccountService.createBankAccount(savedUser).getBody());
+//        savedUser.setAccountNumber(accountNumber);
+//        messageService.registrationNotification(user.getUsername(), user.getFirstName(), accountNumber);
 //
 //        return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
 //    }
 
-    @Async
+    public ResponseEntity<AccountUser> postAccountUser(AccountUser user) throws MessagingException {
+        passwordEncoder = accountConfig.passwordEncoder();
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRole(Role.USER);
+        AccountUser savedUser = accountUserRepository.save(user);
+        bankAccountService.createBankAccount(savedUser);
+        messageService.registrationNotification(user.getUsername(), user.getFirstName());
+        return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
+    }
+
     public ResponseEntity<LoginResponse> authenticated(LoginRequest loginRequest) throws MessagingException {
         Authentication auth = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
@@ -134,6 +131,9 @@ public class AccountUserService {
 
     public String resetUserPassword(String username) throws MessagingException {
         AccountUser user = accountUserRepository.getByUsername(username);
+//        if (!user.getUsername().equals(username)) {
+//            return "User not found";
+//        }
         if (user == null) {
             return "User not found";
         }
