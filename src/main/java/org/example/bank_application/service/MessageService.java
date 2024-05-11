@@ -25,12 +25,13 @@ public class MessageService {
     }
 
     @Async
-    public void registrationNotification( String receiver, String firstName ) throws MessagingException {
+    public void registrationNotification( String receiver, String firstName,String accountNO ) throws MessagingException {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, true, "utf-8");
         messageHelper.setTo(receiver);
         messageHelper.setSubject("Registration Successful!");
-        String message = String.format("Dear %s,\nCongratulations!\nYou have successfully registered with Email address: %s", firstName, receiver);
+        String message = String.format("Dear %s,\nCongratulations!\nYou have successfully registered with Email address: %s. " +
+                "\n Your Account Number is " + accountNO, firstName, receiver);
         messageHelper.setText(message);
         javaMailSender.send(messageHelper.getMimeMessage());
     }

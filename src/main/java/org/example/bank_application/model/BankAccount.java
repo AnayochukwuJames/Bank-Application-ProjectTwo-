@@ -1,5 +1,6 @@
 package org.example.bank_application.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
@@ -18,8 +19,14 @@ public class BankAccount {
     private String accountNumber;
     private double accountBalance;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private AccountUser accountUser;
+
+//
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "user_id")
+//    private AccountUser accountUser;
+
 
 }

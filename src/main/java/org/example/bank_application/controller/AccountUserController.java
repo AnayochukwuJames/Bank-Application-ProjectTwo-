@@ -58,12 +58,12 @@ public class AccountUserController {
         return accountUserService.getAccountUserByPhoneNumber(phoneNumber);
     }
 
-    @PostMapping("/reset_password")
-    public String resetUserPassword(String username) throws MessagingException {
+    @GetMapping("/reset_password")
+    public String resetUserPassword(@RequestParam String username) throws MessagingException {
         return accountUserService.resetUserPassword(username);
     }
     @PostMapping("/change_password")
-    public String changePassword(ChangePasswordRequest request){
-        return accountUserService.changePassword(request);
+    public String changePassword(@RequestBody ChangePasswordRequest changePasswordRequest){
+        return accountUserService.changePassword(changePasswordRequest);
     }
 }

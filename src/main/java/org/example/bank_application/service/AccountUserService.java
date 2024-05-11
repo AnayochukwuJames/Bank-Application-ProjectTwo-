@@ -14,6 +14,8 @@ import org.example.bank_application.model.BankAccount;
 import org.example.bank_application.model.ResetCode;
 import org.example.bank_application.repository.AccountUserRepository;
 import org.example.bank_application.repository.ResetCodeRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -25,9 +27,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 @Service
@@ -35,6 +39,7 @@ import java.util.Random;
 public class AccountUserService {
 
 
+    private static final Logger log = LoggerFactory.getLogger(AccountUserService.class);
     private PasswordEncoder passwordEncoder;
 
     private final AuthenticationManager authenticationManager;
@@ -51,26 +56,16 @@ public class AccountUserService {
 
     private final ResetCodeRepository resetCodeRepository;
 
-
-//    public ResponseEntity<AccountUser> postAccountUser(AccountUser user) throws MessagingException {
-//        passwordEncoder = accountConfig.passwordEncoder();
-//        user.setPassword(passwordEncoder.encode(user.getPassword()));
-//        user.setRole(Role.USER);
-//        AccountUser savedUser = accountUserRepository.save(user);
-//        String accountNumber = String.valueOf(bankAccountService.createBankAccount(savedUser).getBody());
-//        savedUser.setAccountNumber(accountNumber);
-//        messageService.registrationNotification(user.getUsername(), user.getFirstName(), accountNumber);
-//
-//        return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
-//    }
-
+    @Transactional
     public ResponseEntity<AccountUser> postAccountUser(AccountUser user) throws MessagingException {
         passwordEncoder = accountConfig.passwordEncoder();
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole(Role.USER);
         AccountUser savedUser = accountUserRepository.save(user);
-        bankAccountService.createBankAccount(savedUser);
-        messageService.registrationNotification(user.getUsername(), user.getFirstName());
+   BankAccount account=  bankAccountService.createBankAccount(savedUser).getBody();
+   if(Objects.nonNull(account)) {
+       messageService.registrationNotification(user.getUsername(), user.getFirstName(), account.getAccountNumber());
+   }
         return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
     }
 
@@ -93,7 +88,7 @@ public class AccountUserService {
     }
 
     @CacheEvict(value = "delete", allEntries = true)
-    public ResponseEntity<AccountUser> delete(@PathVariable Long id){
+    public ResponseEntity<AccountUser> delete(Long id){
         AccountUser deletedUser = accountUserRepository.findById(id).get();
         accountUserRepository.deleteById(id);
         return new ResponseEntity<>(deletedUser, HttpStatus.OK);
@@ -101,7 +96,7 @@ public class AccountUserService {
 
 
     @CacheEvict(value = {"updateAccountUser", "getAccountById"}, allEntries = true, key = "#id")
-    public ResponseEntity<AccountUser> updateAccountUser(@PathVariable Long id, @RequestBody AccountUser user){
+    public ResponseEntity<AccountUser> updateAccountUser(Long id, AccountUser user){
         AccountUser updatedUser = accountUserRepository.findById(id).get();
         updatedUser.setFirstName(user.getFirstName());
         updatedUser.setMiddleName(user.getMiddleName());
@@ -124,17 +119,13 @@ public class AccountUserService {
         return new ResponseEntity<>(accountUserRepository.findAccountUserByPhoneNumber(phoneNumber), HttpStatus.OK);
     }
 
-    @Cacheable(value = "getAccountUserByUsername", key = "#username")
-    public ResponseEntity<AccountUser> getAccountUserByUsername(@RequestBody String username) {
+    public ResponseEntity<AccountUser> getAccountUserByUsername(String username) {
         return new ResponseEntity<>(accountUserRepository.getByUsername(username), HttpStatus.OK);
     }
 
     public String resetUserPassword(String username) throws MessagingException {
         AccountUser user = accountUserRepository.getByUsername(username);
-//        if (!user.getUsername().equals(username)) {
-//            return "User not found";
-//        }
-        if (user == null) {
+        if (! user.getUsername().equals(username)) {
             return "User not found";
         }
         String randomCode = RandomStringUtils.randomNumeric(6);
@@ -156,25 +147,24 @@ public class AccountUserService {
         if (accountUserResponse == null || accountUserResponse.getBody() == null) {
             return "Account not found";
         }
-
         AccountUser accountUser = accountUserResponse.getBody();
-        ResetCode resetCodes = (ResetCode) resetCodeRepository.findByAccountUser(accountUser);
-        if (resetCodes == null || resetCodes.getCode() == null) {
+        ResetCode resetCode = (ResetCode) resetCodeRepository.findByAccountUser(accountUser);
+        if (resetCode == null || resetCode.getCode() == null) {
             return "Reset code not found";
         }
-
-        String resetCode = resetCodes.getCode();
-        if (!request.getResetCode().equals(resetCode)) {
+        String storedResetCode = resetCode.getCode();
+        if (!request.getResetCode().equals(storedResetCode)) {
             return "Invalid Reset Code";
         }
         if (!request.getPassword().equals(request.getConfirmPassword())) {
             return "Password Mismatch";
         }
-
         String encodedPassword = passwordEncoder.encode(request.getPassword());
         accountUser.setPassword(encodedPassword);
         accountUserRepository.save(accountUser);
 
+        resetCodeRepository.delete(resetCode);
         return "Password changed Successfully";
     }
+
 }

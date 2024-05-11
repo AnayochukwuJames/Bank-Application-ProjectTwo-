@@ -40,7 +40,7 @@ import java.util.List;
     @Email
     @Length(min = 5, max = 50)
     private String username;
-//    @NotBlank
+//   @NotBlank
 //    @NotNull
 //    @Length(min = 5, max = 20, message = "Your password must be more than 5 characters and less than 20")
 //    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=!])(?!.*\\s).{8,20}$",

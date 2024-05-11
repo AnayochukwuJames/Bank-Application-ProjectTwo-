@@ -25,6 +25,8 @@ public class BankOperationService {
     private final AccountUserService accountUserService;
 
     private final MessageService messageService;
+
+    @Transactional
     public ResponseEntity<BankAccount> depositFund(String accountNumber, double amount, String transId) throws MessagingException {
         if( amount <= 0 ){
             System.out.println(amount);
@@ -40,14 +42,15 @@ public class BankOperationService {
         transaction.setAmount(amount);
         transaction.setTransactionType(TransactionType.DEPOSIT);
         transaction.setTransactionId(transId);
+
         transactionService.postNewTransaction(transaction);
         AccountUser user = accountUserService.getAccountById(account.getAccountUser().getId()).getBody();
-//        AccountUser user = accountUserService.getAccountUserById(account.getAccountUser().getId()).getBody();
         assert user != null;
         messageService.depositNotification(user.getFirstName(), user.getUsername(), amount);
         return new ResponseEntity<>(bankAccountService.updateAccount(account).getBody(), HttpStatus.OK);
     }
 
+    @Transactional
     public ResponseEntity<BankAccount> withdrawFund(String accountNumber, double amount, String transId) throws MessagingException{
         if( amount <= 0 ){
             System.out.println(amount);
@@ -68,7 +71,6 @@ public class BankOperationService {
         transaction.setTransactionId(transId);
         transactionService.postNewTransaction(transaction);
         AccountUser user = accountUserService.getAccountById(account.getAccountUser().getId()).getBody();
-//        AccountUser user = accountUserService.getAccountUserById(account.getUser().getId()).getBody();
         assert user != null;
         messageService.withdrawalNotification(user.getFirstName(), user.getUsername(), amount);
         return new ResponseEntity<>(bankAccountService.updateAccount(account).getBody(), HttpStatus.OK);
