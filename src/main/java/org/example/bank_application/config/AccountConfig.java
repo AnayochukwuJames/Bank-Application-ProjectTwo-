@@ -13,14 +13,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 
-/*create bean
-  UserDetailService
-  PasswordEnder
-  authentication
-  authorization
-  Security filter chain
-  csrf -> disable*/
-
 @Configuration
 public class AccountConfig {
     @Autowired

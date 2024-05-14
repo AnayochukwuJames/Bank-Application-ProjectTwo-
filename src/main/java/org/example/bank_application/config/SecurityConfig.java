@@ -27,10 +27,6 @@ public class SecurityConfig {
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize-> authorize
                 .requestMatchers("/user/**",
-                        "/user/login",
-                        "reset_password",
-                        "username",
-
                         "/api-docs",
                         "http://localhost:8087/swagger-ui/index.html**",
                         "/swagger-ui.html",

@@ -23,10 +23,5 @@ public class BankAccount {
     @JoinColumn(name = "user_id")
     private AccountUser accountUser;
 
-//
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "user_id")
-//    private AccountUser accountUser;
-
 
 }
