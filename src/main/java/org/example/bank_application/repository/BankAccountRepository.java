@@ -7,9 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface BankAccountRepository extends JpaRepository<BankAccount, Long> {
 
-//    BankAccount findByUser(String username);
-
-
     BankAccount findBankAccountByAccountNumber(String accountNumber);
 
 }

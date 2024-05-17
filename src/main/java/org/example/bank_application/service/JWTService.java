@@ -6,6 +6,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -18,8 +19,8 @@ import java.util.function.Function;
 
 @Service
 public class JWTService {
-
-private static final String SECRET_KEY = "SYfS/b7w48CUe6MPZFE4btA/vt2o99UYI9JKariBrfNT7+31opwqzEHnYW6to3cQa7VU+446p4b+Je+taQYMVQ==";
+    @Value("${application.secretKey}")
+    private String SECRET_KEY;
 
 private Key getSignIngKey(){
     byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
@@ -41,7 +42,11 @@ private String createFreshToken (Map<String, Object> mapOfClaims, UserDetails us
             .compact();
 }
 
-private Claims extractAllClaims(String token){
+//    String generateRefreshToken(Map<String, Object> extraClaim, UserDetails userDetails) {
+//        return null;
+//    }
+
+    private Claims extractAllClaims(String token){
     return Jwts.parserBuilder()
             .setSigningKey(getSignIngKey())
             .build()

@@ -40,6 +40,7 @@ public class AccountUserService {
 
 
     private static final Logger log = LoggerFactory.getLogger(AccountUserService.class);
+
     private PasswordEncoder passwordEncoder;
 
     private final AuthenticationManager authenticationManager;
