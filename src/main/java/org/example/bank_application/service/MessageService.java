@@ -65,7 +65,7 @@ public class MessageService {
         MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, true, "utf-8");
         messageHelper.setTo(username);
         messageHelper.setSubject("Password Reset Code!");
-        String message = String.format("Dear %s,\nHere is your password reset code: %s.", username, code);
+        String message = String.format("Dear %s,\nHere is your password reset code \n %s.", username, code);
         messageHelper.setText(message);
 
         javaMailSender.send(messageHelper.getMimeMessage());
